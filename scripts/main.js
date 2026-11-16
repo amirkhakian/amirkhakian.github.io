@@ -79,8 +79,9 @@ const PROJECTS = [
     client: "Japan",
     title: "Travel Vlog",
     cat: "Travel",
-    dur: "9:17",
-    driveId: "1ylHRUh2T2sc_wUX9Y4p2vyGRByG39eCs",
+    dur: "0:35",
+    localVideo: "assets/videos/japan-35s.mp4",
+    poster: "assets/images/chapters/japan.jpg",
     chapter: "assets/images/chapters/japan.jpg",
     layout: "wide",
     desc: "Nine minutes through Japan \u2014 neon streets, night crossings, and the small moments in between. A long-form travel vlog cut for rhythm, holding the journey together from the first frame to the last.",
@@ -99,9 +100,10 @@ const PROJECTS = [
     client: "Larry Fink",
     title: "\u201CThe $15 Trillion Company Nobody Can Name\u201D",
     cat: "Documentary",
-    dur: "0:57",
+    dur: "0:56",
     localVideo: "assets/videos/larry-fink-clip.mp4",
     poster: "assets/images/larry-fink-poster.jpg",
+    fullEpisodeUrl: "https://drive.google.com/file/d/1UIbnd8KTOVn5A7LLwsxlOTltBmcKjsQ-/view?usp=drive_link",
     layout: "wide",
     feature: true,
     desc: "Motion design and sound design for episode 2 of a YouTube animated documentary about Larry Fink and BlackRock. This 56-second excerpt runs from his First Boston years to the fall.",
@@ -184,6 +186,12 @@ PROJECTS.forEach((p, i) => {
     drive.className = "chapter-drive";
     drive.innerHTML = `<a href="https://drive.google.com/file/d/${p.driveId}/view" target="_blank" rel="noopener noreferrer">Open in Drive ↗</a>`;
     links.appendChild(drive);
+  }
+  if (p.fullEpisodeUrl) {
+    const full = document.createElement("span");
+    full.className = "chapter-drive";
+    full.innerHTML = `<a href="${p.fullEpisodeUrl}" target="_blank" rel="noopener noreferrer">Open in Drive ↗</a>`;
+    links.appendChild(full);
   }
   const closeBtn = document.createElement("button");
   closeBtn.className = "player-close";
