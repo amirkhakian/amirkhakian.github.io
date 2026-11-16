@@ -115,6 +115,17 @@ img, video, iframe { display: block; max-width: 100%; }
   margin-inline: auto;
 }
 
+/* On desktop the hero text and top bar span wider than the 1200px
+   content column: on a wide screen the container left a big empty
+   strip on the left of the hero. Scoped to desktop so phones keep
+   their 24px margins. */
+@media (min-width: 641px) {
+  .topbar .wrap,
+  .hero .wrap {
+    width: min(100% - 10vw, 1600px);
+  }
+}
+
 .mono {
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -760,6 +771,7 @@ footer { border-top: 1px solid var(--line); }
 }
 
 @media (max-width: 640px) {
+  .scroll-line-svg { display: none; }
   .topnav { display: none; }
   .avail { font-size: 0.8rem; }
   .section-head { padding-top: 64px; margin-bottom: 40px; }

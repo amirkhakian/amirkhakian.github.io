@@ -289,6 +289,13 @@ copyBtn.addEventListener("click", async () => {
 
 const chapterEls = [...chaptersEl.querySelectorAll(".chapter")];
 const lineReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* The ribbon is a desktop flourish: on narrow screens the chapters stack
+   and the ribbon's path would run through the text column, so there is
+   no line at all below 640px. Checked live (not once) because the
+   viewport can cross the threshold on rotate or resize. */
+function lineDisabled() {
+  return lineReduced || window.matchMedia("(max-width: 640px)").matches;
+}
 const SVGNS = "http://www.w3.org/2000/svg";
 
 let lineSvg = null;
@@ -497,7 +504,7 @@ function buildLine() {
   updateLine();
 }
 
-if (!lineReduced) {
+function createLineSvg() {
   lineSvg = document.createElementNS(SVGNS, "svg");
   lineSvg.setAttribute("class", "scroll-line-svg");
   lineSvg.setAttribute("aria-hidden", "true");
@@ -512,8 +519,16 @@ if (!lineReduced) {
   buildLine();
 }
 
+function destroyLineSvg() {
+  if (lineSvg) lineSvg.remove();
+  lineSvg = trackPath = guidePath = ribbonPath = null;
+  pathLen = 0;
+}
+
+if (!lineDisabled()) createLineSvg();
+
 function updateLine() {
-  if (lineReduced) return;
+  if (lineDisabled()) return;
   if (!pathLen) return;
   const rect = chaptersEl.getBoundingClientRect();
   /* The tip travels with a point 72% down the viewport. The ribbon
@@ -554,11 +569,17 @@ let lineResizeTimer = null;
 window.addEventListener("resize", () => {
   clearTimeout(lineResizeTimer);
   lineResizeTimer = setTimeout(() => {
-    if (!lineReduced) buildLine();
+    if (lineDisabled()) {
+      destroyLineSvg();
+    } else if (!lineSvg) {
+      createLineSvg();
+    } else {
+      buildLine();
+    }
   }, 150);
 });
 window.addEventListener("load", () => {
-  if (!lineReduced) buildLine();
+  if (!lineDisabled() && lineSvg) buildLine();
 });
 updateLine();
 
